@@ -41,7 +41,7 @@
 
   .buttons {
     position: relative;
-    height: 150px;
+    height: 160px;
   }
 
   button {
@@ -51,21 +51,23 @@
     border: none;
     cursor: pointer;
     position: absolute;
-    transition: transform 0.25s ease;
+    transition: transform 0.3s ease, left 0.3s ease, top 0.3s ease;
   }
 
   #yesBtn {
     background: #ff4d6d;
     color: white;
     left: 50%;
-    transform: translateX(-120px) scale(1);
+    top: 50%;
+    transform: translate(-120px, -50%) scale(1);
   }
 
   #noBtn {
     background: #d9d9d9;
     color: #333;
     left: 50%;
-    transform: translateX(20px);
+    top: 50%;
+    transform: translate(20px, -50%);
   }
 
   .message {
@@ -75,7 +77,6 @@
     color: #e6005c;
   }
 
-  /* Floating hearts */
   .heart {
     position: fixed;
     bottom: -20px;
@@ -86,13 +87,9 @@
   }
 
   @keyframes floatUp {
-    to {
-      transform: translateY(-110vh);
-      opacity: 0;
-    }
+    to { transform: translateY(-110vh); opacity: 0; }
   }
 
-  /* Confetti */
   .confetti {
     position: fixed;
     width: 10px;
@@ -112,7 +109,6 @@
 
 <body>
 
-<!-- 🎵 Background music -->
 <audio id="bgMusic" preload="auto" loop>
   <source src="./lovergirl.mp3" type="audio/mpeg">
 </audio>
@@ -164,13 +160,17 @@
     startMusic();
     noClicks++;
 
-    /* Grow YES button */
     yesScale += 0.08;
-    yesBtn.style.transform = `translateX(-120px) scale(${yesScale})`;
+    yesBtn.style.transform = `translate(-120px, -50%) scale(${yesScale})`;
 
     if (noClicks >= MAX_NO_CLICKS) {
       noBtn.style.display = "none";
       question.textContent = "Please just say yes 🥺💖";
+
+      /* CENTER YES BUTTON */
+      yesBtn.style.left = "50%";
+      yesBtn.style.top = "50%";
+      yesBtn.style.transform = `translate(-50%, -50%) scale(${yesScale})`;
       return;
     }
 
@@ -184,7 +184,6 @@
     noBtn.style.top = y + "px";
   };
 
-  /* Floating hearts */
   setInterval(() => {
     const heart = document.createElement("div");
     heart.className = "heart";
@@ -196,7 +195,6 @@
     setTimeout(() => heart.remove(), 6000);
   }, 300);
 
-  /* Confetti */
   function launchConfetti() {
     for (let i = 0; i < 150; i++) {
       const c = document.createElement("div");
@@ -204,7 +202,7 @@
       c.style.left = Math.random() * 100 + "vw";
       c.style.top = "-10px";
       c.style.background =
-        ["#ff4d6d", "#ffd166", "#ff8fab", "#cdb4db"][Math.floor(Math.random() * 4)];
+        ["#ff4d6d","#ffd166","#ff8fab","#cdb4db"][Math.floor(Math.random()*4)];
       document.body.appendChild(c);
       setTimeout(() => c.remove(), 3000);
     }
