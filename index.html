@@ -6,124 +6,109 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-* {
-  box-sizing: border-box;
-  font-family: 'Poppins', 'Comic Sans MS', cursive;
-}
-
-body {
-  margin: 0;
-  height: 100vh;
-  background: linear-gradient(135deg, #ff758c, #ff7eb3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
-/* Card */
-.container {
-  background: rgba(255,255,255,0.95);
-  padding: 40px 30px;
-  border-radius: 25px;
-  text-align: center;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-  width: 90%;
-  max-width: 420px;
-  position: relative;
-  z-index: 2;
-}
-
-h1 {
-  color: #e6005c;
-  font-size: 2.2em;
-  margin-bottom: 35px;
-}
-
-/* Buttons wrapper */
-.buttons {
-  position: relative;
-  height: 130px;
-}
-
-/* Buttons */
-button {
-  padding: 15px 35px;
-  font-size: 1.2em;
-  border-radius: 50px;
-  border: none;
-  cursor: pointer;
-  position: absolute;
-  transition: all 0.3s ease;
-}
-
-/* YES — centered by default */
-#yesBtn {
-  background: #ff4d6d;
-  color: white;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* NO — slightly to the right */
-#noBtn {
-  background: #d9d9d9;
-  color: #333;
-  left: 50%;
-  transform: translateX(80px);
-}
-
-/* Force YES to center after NO disappears */
-.center-yes {
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-}
-
-/* Message */
-.message {
-  display: none;
-  margin-top: 30px;
-  font-size: 1.5em;
-  color: #e6005c;
-}
-
-/* Hearts */
-.heart {
-  position: fixed;
-  bottom: -20px;
-  font-size: 20px;
-  animation: floatUp linear forwards;
-  opacity: 0.8;
-  z-index: 1;
-}
-
-@keyframes floatUp {
-  to { transform: translateY(-110vh); opacity: 0; }
-}
-
-/* Confetti */
-.confetti {
-  position: fixed;
-  width: 10px;
-  height: 10px;
-  animation: confettiFall 3s linear forwards;
-  z-index: 3;
-}
-
-@keyframes confettiFall {
-  to {
-    transform: translateY(110vh) rotate(720deg);
-    opacity: 0;
+  * {
+    box-sizing: border-box;
+    font-family: 'Poppins', 'Comic Sans MS', cursive;
   }
-}
+
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .container {
+    background: rgba(255,255,255,0.95);
+    padding: 40px 30px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    width: 90%;
+    max-width: 420px;
+    position: relative;
+    z-index: 2;
+  }
+
+  h1 {
+    color: #e6005c;
+    font-size: 2.2em;
+    margin-bottom: 35px;
+  }
+
+  .buttons {
+    position: relative;
+    height: 130px;
+  }
+
+  button {
+    padding: 15px 35px;
+    font-size: 1.2em;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+  }
+
+  #yesBtn {
+    background: #ff4d6d;
+    color: white;
+    left: 50%;
+    transform: translateX(-120px);
+  }
+
+  #noBtn {
+    background: #d9d9d9;
+    color: #333;
+    left: 50%;
+    transform: translateX(20px);
+  }
+
+  .message {
+    display: none;
+    margin-top: 30px;
+    font-size: 1.5em;
+    color: #e6005c;
+  }
+
+  .heart {
+    position: fixed;
+    bottom: -20px;
+    font-size: 20px;
+    animation: floatUp linear forwards;
+    opacity: 0.8;
+    z-index: 1;
+  }
+
+  @keyframes floatUp {
+    to { transform: translateY(-110vh); opacity: 0; }
+  }
+
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    animation: confettiFall 3s linear forwards;
+    z-index: 3;
+  }
+
+  @keyframes confettiFall {
+    to {
+      transform: translateY(110vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
 </style>
 </head>
 
 <body>
 
 <!-- 🎵 BACKGROUND MUSIC -->
-<audio id="bgMusic" preload="auto" loop>
-  <source src="./lovergirl.mp3" type="audio/mpeg">
+<audio id="bgMusic" loop>
+  <source src="lovergirl.mp3" type="audio/mpeg">
 </audio>
 
 <div class="container">
@@ -149,31 +134,28 @@ const message = document.getElementById("message");
 let musicStarted = false;
 let noClicks = 0;
 
-/* Start music safely */
 function startMusic() {
-  if (musicStarted) return;
-  music.volume = 0.7;
-  music.play().catch(()=>{});
-  musicStarted = true;
+  if (!musicStarted) {
+    music.volume = 0.7;
+    music.play();
+    musicStarted = true;
+  }
 }
 
-/* YES click */
 yesBtn.onclick = () => {
   startMusic();
   message.style.display = "block";
   yesBtn.style.display = "none";
   noBtn.style.display = "none";
-  launchConfetti();
+  confetti();
 };
 
-/* NO click */
 noBtn.onclick = () => {
   startMusic();
   noClicks++;
 
   if (noClicks >= 15) {
     noBtn.style.display = "none";
-    yesBtn.classList.add("center-yes");
     return;
   }
 
@@ -184,7 +166,6 @@ noBtn.onclick = () => {
   noBtn.style.top = Math.random() * (r.height - noBtn.offsetHeight) + "px";
 };
 
-/* Floating hearts */
 setInterval(() => {
   const h = document.createElement("div");
   h.className = "heart";
@@ -196,8 +177,7 @@ setInterval(() => {
   setTimeout(() => h.remove(), 6000);
 }, 300);
 
-/* Confetti */
-function launchConfetti() {
+function confetti() {
   for (let i = 0; i < 150; i++) {
     const c = document.createElement("div");
     c.className = "confetti";
