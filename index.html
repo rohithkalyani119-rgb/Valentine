@@ -1,195 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Valentine 💖</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Will You Be My Valentine?</title>
 
-<style>
-  * {
-    box-sizing: border-box;
-    font-family: 'Poppins', 'Comic Sans MS', cursive;
-  }
-
-  body {
-    margin: 0;
-    height: 100vh;
-    background: linear-gradient(135deg, #ff758c, #ff7eb3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-
-  .container {
-    background: rgba(255,255,255,0.95);
-    padding: 40px 30px;
-    border-radius: 25px;
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-    width: 90%;
-    max-width: 420px;
-    position: relative;
-    z-index: 2;
-  }
-
-  h1 {
-    color: #e6005c;
-    font-size: 2.2em;
-    margin-bottom: 35px;
-  }
-
-  .buttons {
-    position: relative;
-    height: 130px;
-  }
-
-  button {
-    padding: 15px 35px;
-    font-size: 1.2em;
-    border-radius: 50px;
-    border: none;
-    cursor: pointer;
-    position: absolute;
-  }
-
-  #yesBtn {
-    background: #ff4d6d;
-    color: white;
-    left: 50%;
-    transform: translateX(-120px);
-  }
-
-  #noBtn {
-    background: #d9d9d9;
-    color: #333;
-    left: 50%;
-    transform: translateX(20px);
-  }
-
-  .message {
-    display: none;
-    margin-top: 30px;
-    font-size: 1.5em;
-    color: #e6005c;
-  }
-
-  .heart {
-    position: fixed;
-    bottom: -20px;
-    font-size: 20px;
-    animation: floatUp linear forwards;
-    opacity: 0.8;
-    z-index: 1;
-  }
-
-  @keyframes floatUp {
-    to { transform: translateY(-110vh); opacity: 0; }
-  }
-
-  .confetti {
-    position: fixed;
-    width: 10px;
-    height: 10px;
-    animation: confettiFall 3s linear forwards;
-    z-index: 3;
-  }
-
-  @keyframes confettiFall {
-    to {
-      transform: translateY(110vh) rotate(720deg);
-      opacity: 0;
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Comic Sans MS', 'Poppins', cursive;
     }
-  }
-</style>
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 50px 60px;
+      border-radius: 25px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      position: relative;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    h1 {
+      color: #e6005c;
+      font-size: 2.5em;
+      margin-bottom: 40px;
+      transition: all 0.4s ease;
+    }
+
+    .buttons {
+      position: relative;
+      height: 140px;
+    }
+
+    button {
+      padding: 15px 35px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: absolute;
+    }
+
+    #yesBtn {
+      background: #ff4d6d;
+      color: white;
+      left: 50%;
+      top: 50%;
+      transform: translate(-120%, -50%);
+    }
+
+    #yesBtn:hover {
+      background: #e6005c;
+      transform: translate(-120%, -50%) scale(1.1);
+    }
+
+    #noBtn {
+      background: #cccccc;
+      color: #333;
+      left: 50%;
+      top: 50%;
+      transform: translate(20%, -50%);
+    }
+
+    .message {
+      margin-top: 30px;
+      font-size: 1.5em;
+      color: #e6005c;
+      display: none;
+    }
+
+    /* Floating hearts */
+    .heart {
+      position: fixed;
+      bottom: -20px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 20px;
+      animation: floatUp 6s linear infinite;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-110vh) scale(1.5);
+        opacity: 0;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- 🎵 BACKGROUND MUSIC -->
-<audio id="bgMusic" loop>
-  <source src="lovergirl.mp3" type="audio/mpeg">
-</audio>
+  <div class="container">
+    <h1 id="heading">Will you be my Valentine? 💕</h1>
 
-<div class="container">
-  <h1>Will you be my Valentine, Theresa? 💕</h1>
+    <div class="buttons">
+      <button id="yesBtn">Yes 💖</button>
+      <button id="noBtn">No 🙈</button>
+    </div>
 
-  <div class="buttons">
-    <button id="yesBtn">Yes 💖</button>
-    <button id="noBtn">No 🙈</button>
+    <div class="message" id="message">
+      Yayyy!!! 💘💐 You just made my day!
+    </div>
   </div>
 
-  <div class="message" id="message">
-    YAY!!! 💘💐  
-    I knew you’d say yes 😍
-  </div>
-</div>
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const message = document.getElementById("message");
+    const heading = document.getElementById("heading");
 
-<script>
-const music = document.getElementById("bgMusic");
-const yesBtn = document.getElementById("yesBtn");
-const noBtn = document.getElementById("noBtn");
-const message = document.getElementById("message");
+    let noClickCount = 0;
+    const maxNoClicks = 15;
 
-let musicStarted = false;
-let noClicks = 0;
+    noBtn.addEventListener("click", () => {
+      noClickCount++;
 
-function startMusic() {
-  if (!musicStarted) {
-    music.volume = 0.7;
-    music.play();
-    musicStarted = true;
-  }
-}
+      if (noClickCount >= maxNoClicks) {
+        heading.textContent = "please just say yes 🥺";
 
-yesBtn.onclick = () => {
-  startMusic();
-  message.style.display = "block";
-  yesBtn.style.display = "none";
-  noBtn.style.display = "none";
-  confetti();
-};
+        noBtn.style.display = "none";
 
-noBtn.onclick = () => {
-  startMusic();
-  noClicks++;
+        yesBtn.style.left = "50%";
+        yesBtn.style.top = "50%";
+        yesBtn.style.transform = "translate(-50%, -50%)";
 
-  if (noClicks >= 15) {
-    noBtn.style.display = "none";
-    return;
-  }
+        return;
+      }
 
-  const c = document.querySelector(".container");
-  const r = c.getBoundingClientRect();
+      const container = document.querySelector(".buttons");
+      const rect = container.getBoundingClientRect();
 
-  noBtn.style.left = Math.random() * (r.width - noBtn.offsetWidth) + "px";
-  noBtn.style.top = Math.random() * (r.height - noBtn.offsetHeight) + "px";
-};
+      const maxX = rect.width - noBtn.offsetWidth;
+      const maxY = rect.height - noBtn.offsetHeight;
 
-setInterval(() => {
-  const h = document.createElement("div");
-  h.className = "heart";
-  h.textContent = "❤️";
-  h.style.left = Math.random() * 100 + "vw";
-  h.style.fontSize = Math.random() * 20 + 15 + "px";
-  h.style.animationDuration = Math.random() * 3 + 4 + "s";
-  document.body.appendChild(h);
-  setTimeout(() => h.remove(), 6000);
-}, 300);
+      noBtn.style.left = Math.random() * maxX + "px";
+      noBtn.style.top = Math.random() * maxY + "px";
+      noBtn.style.transform = "none";
+    });
 
-function confetti() {
-  for (let i = 0; i < 150; i++) {
-    const c = document.createElement("div");
-    c.className = "confetti";
-    c.style.left = Math.random() * 100 + "vw";
-    c.style.top = "-10px";
-    c.style.background =
-      ["#ff4d6d","#ffd166","#ff8fab","#cdb4db"][Math.floor(Math.random()*4)];
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 3000);
-  }
-}
-</script>
+    yesBtn.addEventListener("click", () => {
+      message.style.display = "block";
+      heading.style.display = "none";
+      yesBtn.style.display = "none";
+      noBtn.style.display = "none";
+    });
+
+    /* Floating hearts */
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerHTML = "❤️";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = Math.random() * 20 + 15 + "px";
+      heart.style.animationDuration = Math.random() * 3 + 4 + "s";
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 6000);
+    }
+
+    setInterval(createHeart, 300);
+  </script>
 
 </body>
 </html>
