@@ -22,26 +22,29 @@
   }
 
   .container {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255,255,255,0.95);
     padding: 40px 30px;
     border-radius: 25px;
     text-align: center;
     box-shadow: 0 20px 40px rgba(0,0,0,0.25);
     width: 90%;
     max-width: 420px;
-    position: relative;
     z-index: 2;
   }
 
   h1 {
     color: #e6005c;
     font-size: 2.2em;
-    margin-bottom: 35px;
+    margin-bottom: 30px;
   }
 
   .buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    height: 150px;
     position: relative;
-    height: 160px;
   }
 
   button {
@@ -50,29 +53,25 @@
     border-radius: 50px;
     border: none;
     cursor: pointer;
-    position: absolute;
-    transition: transform 0.3s ease, left 0.3s ease, top 0.3s ease;
+    transition: transform 0.25s ease;
   }
 
   #yesBtn {
     background: #ff4d6d;
     color: white;
-    left: 50%;
-    top: 50%;
-    transform: translate(-120px, -50%) scale(1);
+    transform: scale(1);
   }
 
   #noBtn {
     background: #d9d9d9;
     color: #333;
-    left: 50%;
-    top: 50%;
-    transform: translate(20px, -50%);
+    position: absolute;
+    right: 0;
   }
 
   .message {
     display: none;
-    margin-top: 30px;
+    margin-top: 25px;
     font-size: 1.5em;
     color: #e6005c;
   }
@@ -87,7 +86,10 @@
   }
 
   @keyframes floatUp {
-    to { transform: translateY(-110vh); opacity: 0; }
+    to {
+      transform: translateY(-110vh);
+      opacity: 0;
+    }
   }
 
   .confetti {
@@ -116,97 +118,95 @@
 <div class="container">
   <h1 id="question">Will you be my Valentine, Theresa? 💕</h1>
 
-  <div class="buttons">
+  <div class="buttons" id="buttons">
     <button id="yesBtn">Yes 💖</button>
     <button id="noBtn">No 🙈</button>
   </div>
 
   <div class="message" id="message">
-    YAY!!! 💘💐  
-    I knew you’d say yes 😍
+    YAY!!! 💘💐 I knew you’d say yes 😍
   </div>
 </div>
 
 <script>
-  const music = document.getElementById("bgMusic");
-  const yesBtn = document.getElementById("yesBtn");
-  const noBtn = document.getElementById("noBtn");
-  const question = document.getElementById("question");
-  const message = document.getElementById("message");
+const music = document.getElementById("bgMusic");
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const question = document.getElementById("question");
+const message = document.getElementById("message");
+const buttons = document.getElementById("buttons");
 
-  let musicStarted = false;
-  let noClicks = 0;
-  let yesScale = 1;
-  const MAX_NO_CLICKS = 15;
+let musicStarted = false;
+let noClicks = 0;
+let yesScale = 1;
+const MAX_NO_CLICKS = 15;
 
-  function startMusic() {
-    if (!musicStarted) {
-      music.volume = 0.7;
-      music.play();
-      musicStarted = true;
-    }
+function startMusic() {
+  if (!musicStarted) {
+    music.volume = 0.7;
+    music.play();
+    musicStarted = true;
+  }
+}
+
+yesBtn.onclick = () => {
+  startMusic();
+  question.style.display = "none";
+  buttons.style.display = "none";
+  message.style.display = "block";
+  launchConfetti();
+};
+
+noBtn.onclick = () => {
+  startMusic();
+  noClicks++;
+
+  // Grow YES button
+  yesScale += 0.08;
+  yesBtn.style.transform = `scale(${yesScale})`;
+
+  if (noClicks >= MAX_NO_CLICKS) {
+    noBtn.remove();
+    question.textContent = "Please just say yes 🥺💖";
+
+    // Center YES perfectly
+    buttons.style.justifyContent = "center";
+    yesBtn.style.position = "relative";
+    return;
   }
 
-  yesBtn.onclick = () => {
-    startMusic();
-    question.style.display = "none";
-    yesBtn.style.display = "none";
-    noBtn.style.display = "none";
-    message.style.display = "block";
-    launchConfetti();
-  };
+  // Move NO randomly inside container
+  const rect = buttons.getBoundingClientRect();
+  const x = Math.random() * (rect.width - noBtn.offsetWidth);
+  const y = Math.random() * (rect.height - noBtn.offsetHeight);
 
-  noBtn.onclick = () => {
-    startMusic();
-    noClicks++;
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+};
 
-    yesScale += 0.08;
-    yesBtn.style.transform = `translate(-120px, -50%) scale(${yesScale})`;
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.textContent = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = Math.random() * 20 + 15 + "px";
+  heart.style.animationDuration = Math.random() * 3 + 4 + "s";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 6000);
+}, 300);
 
-    if (noClicks >= MAX_NO_CLICKS) {
-      noBtn.style.display = "none";
-      question.textContent = "Please just say yes 🥺💖";
-
-      /* CENTER YES BUTTON */
-      yesBtn.style.left = "50%";
-      yesBtn.style.top = "50%";
-      yesBtn.style.transform = `translate(-50%, -50%) scale(${yesScale})`;
-      return;
-    }
-
-    const container = document.querySelector(".container");
-    const rect = container.getBoundingClientRect();
-
-    const x = Math.random() * (rect.width - noBtn.offsetWidth);
-    const y = Math.random() * (rect.height - noBtn.offsetHeight);
-
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-  };
-
-  setInterval(() => {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.textContent = "❤️";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = Math.random() * 20 + 15 + "px";
-    heart.style.animationDuration = Math.random() * 3 + 4 + "s";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 6000);
-  }, 300);
-
-  function launchConfetti() {
-    for (let i = 0; i < 150; i++) {
-      const c = document.createElement("div");
-      c.className = "confetti";
-      c.style.left = Math.random() * 100 + "vw";
-      c.style.top = "-10px";
-      c.style.background =
-        ["#ff4d6d","#ffd166","#ff8fab","#cdb4db"][Math.floor(Math.random()*4)];
-      document.body.appendChild(c);
-      setTimeout(() => c.remove(), 3000);
-    }
+function launchConfetti() {
+  for (let i = 0; i < 150; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.top = "-10px";
+    c.style.background =
+      ["#ff4d6d","#ffd166","#ff8fab","#cdb4db"][Math.floor(Math.random()*4)];
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3000);
   }
+}
 </script>
 
 </body>
