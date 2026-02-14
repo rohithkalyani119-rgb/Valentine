@@ -26,16 +26,15 @@
       padding: 50px 60px;
       border-radius: 25px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-      position: relative;
       width: 90%;
       max-width: 500px;
     }
 
     h1 {
       color: #e6005c;
-      font-size: 2.5em;
+      font-size: 2.4em;
       margin-bottom: 40px;
-      transition: all 0.4s ease;
+      transition: opacity 0.3s ease;
     }
 
     .buttons {
@@ -49,8 +48,8 @@
       border: none;
       border-radius: 50px;
       cursor: pointer;
-      transition: all 0.3s ease;
       position: absolute;
+      transition: all 0.3s ease;
     }
 
     #yesBtn {
@@ -81,13 +80,11 @@
       display: none;
     }
 
-    /* Floating hearts */
     .heart {
       position: fixed;
       bottom: -20px;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 20px;
       animation: floatUp 6s linear infinite;
+      opacity: 0.8;
     }
 
     @keyframes floatUp {
@@ -121,8 +118,8 @@
   <script>
     const noBtn = document.getElementById("noBtn");
     const yesBtn = document.getElementById("yesBtn");
-    const message = document.getElementById("message");
     const heading = document.getElementById("heading");
+    const message = document.getElementById("message");
 
     let noClickCount = 0;
     const maxNoClicks = 15;
@@ -130,11 +127,19 @@
     noBtn.addEventListener("click", () => {
       noClickCount++;
 
-      if (noClickCount >= maxNoClicks) {
-        heading.textContent = "please just say yes 🥺";
+      if (noClickCount === maxNoClicks) {
+        // Fade out text
+        heading.style.opacity = "0";
 
+        setTimeout(() => {
+          heading.innerText = "please just say yes 🥺";
+          heading.style.opacity = "1";
+        }, 300);
+
+        // Remove No button
         noBtn.style.display = "none";
 
+        // Center Yes button
         yesBtn.style.left = "50%";
         yesBtn.style.top = "50%";
         yesBtn.style.transform = "translate(-50%, -50%)";
@@ -154,22 +159,19 @@
     });
 
     yesBtn.addEventListener("click", () => {
-      message.style.display = "block";
       heading.style.display = "none";
       yesBtn.style.display = "none";
-      noBtn.style.display = "none";
+      message.style.display = "block";
     });
 
-    /* Floating hearts */
     function createHeart() {
       const heart = document.createElement("div");
-      heart.classList.add("heart");
+      heart.className = "heart";
       heart.innerHTML = "❤️";
       heart.style.left = Math.random() * 100 + "vw";
       heart.style.fontSize = Math.random() * 20 + 15 + "px";
       heart.style.animationDuration = Math.random() * 3 + 4 + "s";
       document.body.appendChild(heart);
-
       setTimeout(() => heart.remove(), 6000);
     }
 
