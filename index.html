@@ -6,101 +6,104 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-  * {
-    box-sizing: border-box;
-    font-family: 'Poppins', 'Comic Sans MS', cursive;
-  }
+* {
+  box-sizing: border-box;
+  font-family: 'Poppins', 'Comic Sans MS', cursive;
+}
 
-  body {
-    margin: 0;
-    height: 100vh;
-    background: linear-gradient(135deg, #ff758c, #ff7eb3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
 
-  .container {
-    background: rgba(255,255,255,0.95);
-    padding: 40px 30px;
-    border-radius: 25px;
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-    width: 90%;
-    max-width: 420px;
-    position: relative;
-    z-index: 2;
-  }
+.container {
+  background: rgba(255,255,255,0.95);
+  padding: 40px 30px;
+  border-radius: 25px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  width: 90%;
+  max-width: 420px;
+  position: relative;
+  z-index: 2;
+}
 
-  h1 {
-    color: #e6005c;
-    font-size: 2.2em;
-    margin-bottom: 35px;
-  }
+h1 {
+  color: #e6005c;
+  font-size: 2.2em;
+  margin-bottom: 35px;
+}
 
-  .buttons {
-    position: relative;
-    height: 130px;
-  }
+.buttons {
+  position: relative;
+  height: 140px;
+}
 
-  button {
-    padding: 15px 35px;
-    font-size: 1.2em;
-    border-radius: 50px;
-    border: none;
-    cursor: pointer;
-    position: absolute;
-  }
+button {
+  padding: 15px 35px;
+  font-size: 1.2em;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: transform 0.2s ease;
+}
 
-  #yesBtn {
-    background: #ff4d6d;
-    color: white;
-    left: 50%;
-    transform: translateX(-120px);
-  }
+#yesBtn {
+  background: #ff4d6d;
+  color: white;
+}
 
-  #noBtn {
-    background: #d9d9d9;
-    color: #333;
-    left: 50%;
-    transform: translateX(20px);
-  }
+#noBtn {
+  background: #d9d9d9;
+  color: #333;
+  top: 70px;
+}
 
-  .message {
-    display: none;
-    margin-top: 30px;
-    font-size: 1.5em;
-    color: #e6005c;
-  }
+.message {
+  display: none;
+  margin-top: 30px;
+  font-size: 1.5em;
+  color: #e6005c;
+}
 
-  .heart {
-    position: fixed;
-    bottom: -20px;
-    font-size: 20px;
-    animation: floatUp linear forwards;
-    opacity: 0.8;
-    z-index: 1;
-  }
+.heart {
+  position: fixed;
+  bottom: -20px;
+  font-size: 20px;
+  animation: floatUp linear forwards;
+  opacity: 0.8;
+  z-index: 1;
+}
 
-  @keyframes floatUp {
-    to { transform: translateY(-110vh); opacity: 0; }
+@keyframes floatUp {
+  to {
+    transform: translateY(-110vh);
+    opacity: 0;
   }
+}
 
-  .confetti {
-    position: fixed;
-    width: 10px;
-    height: 10px;
-    animation: confettiFall 3s linear forwards;
-    z-index: 3;
-  }
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  animation: confettiFall 3s linear forwards;
+  z-index: 3;
+}
 
-  @keyframes confettiFall {
-    to {
-      transform: translateY(110vh) rotate(720deg);
-      opacity: 0;
-    }
+@keyframes confettiFall {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0;
   }
+}
 </style>
 </head>
 
@@ -119,10 +122,7 @@
     <button id="noBtn">No 🙈</button>
   </div>
 
-  <div class="message" id="message">
-    YAY!!! 💘💐  
-    I knew you’d say yes 😍
-  </div>
+  <div class="message" id="message"></div>
 </div>
 
 <script>
@@ -133,6 +133,7 @@ const message = document.getElementById("message");
 
 let musicStarted = false;
 let noClicks = 0;
+let yesScale = 1;
 
 function startMusic() {
   if (!musicStarted) {
@@ -145,6 +146,7 @@ function startMusic() {
 yesBtn.onclick = () => {
   startMusic();
   message.style.display = "block";
+  message.textContent = "YAY!!! 💘💐 I knew you’d say yes 😍";
   yesBtn.style.display = "none";
   noBtn.style.display = "none";
   confetti();
@@ -154,18 +156,29 @@ noBtn.onclick = () => {
   startMusic();
   noClicks++;
 
+  // Grow YES button
+  yesScale += 0.15;
+  yesBtn.style.transform = `translateX(-50%) scale(${yesScale})`;
+
+  // Final NO
   if (noClicks >= 15) {
     noBtn.style.display = "none";
+    message.style.display = "block";
+    message.textContent = "please just say yes 💕";
     return;
   }
 
-  const c = document.querySelector(".container");
-  const r = c.getBoundingClientRect();
+  // Move NO randomly
+  const container = document.querySelector(".buttons");
+  const rect = container.getBoundingClientRect();
 
-  noBtn.style.left = Math.random() * (r.width - noBtn.offsetWidth) + "px";
-  noBtn.style.top = Math.random() * (r.height - noBtn.offsetHeight) + "px";
+  noBtn.style.left =
+    Math.random() * (rect.width - noBtn.offsetWidth) + "px";
+  noBtn.style.top =
+    Math.random() * (rect.height - noBtn.offsetHeight) + "px";
 };
 
+// Floating hearts
 setInterval(() => {
   const h = document.createElement("div");
   h.className = "heart";
@@ -177,6 +190,7 @@ setInterval(() => {
   setTimeout(() => h.remove(), 6000);
 }, 300);
 
+// Confetti
 function confetti() {
   for (let i = 0; i < 150; i++) {
     const c = document.createElement("div");
@@ -184,7 +198,7 @@ function confetti() {
     c.style.left = Math.random() * 100 + "vw";
     c.style.top = "-10px";
     c.style.background =
-      ["#ff4d6d","#ffd166","#ff8fab","#cdb4db"][Math.floor(Math.random()*4)];
+      ["#ff4d6d", "#ffd166", "#ff8fab", "#cdb4db"][Math.floor(Math.random() * 4)];
     document.body.appendChild(c);
     setTimeout(() => c.remove(), 3000);
   }
